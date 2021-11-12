@@ -24,6 +24,7 @@ async function run() {
     const carCollection = database.collection("cars");
     const purchaseCollection = database.collection("purchases");
     const userCollection = database.collection("users");
+    const reviewCollection = database.collection("reviews");
 
     // GET CARS API
 
@@ -47,6 +48,15 @@ async function run() {
     app.post("/cars", async (req, res) => {
       const car = req.body;
       const result = await carCollection.insertOne(car);
+      res.send(result);
+    });
+
+    // delete a car
+
+    app.delete("/cars/:id", async (req, res) => {
+      const result = await carCollection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
       res.send(result);
     });
 
@@ -130,6 +140,22 @@ async function run() {
         isAdmin = true;
       }
       res.send({ admin: isAdmin });
+    });
+
+    // add reviews
+
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    // get all reviews
+
+    app.get("/reviews", async (req, res) => {
+      const cursor = await reviewCollection.find({});
+      const reviews = await cursor.toArray();
+      res.send(reviews);
     });
   } finally {
     // await client.close();
