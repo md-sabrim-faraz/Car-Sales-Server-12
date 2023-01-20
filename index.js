@@ -85,6 +85,16 @@ async function run() {
       res.send(result);
     });
 
+    // GET specific purchase for payment
+
+    app.get("/purchases/pay/:id", async (req, res) => {
+      const id = req.params.id;
+      //console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await purchaseCollection.findOne(query);
+      res.send(result);
+    });
+
     // delete an order
 
     app.delete("/purchases/:id", async (req, res) => {
